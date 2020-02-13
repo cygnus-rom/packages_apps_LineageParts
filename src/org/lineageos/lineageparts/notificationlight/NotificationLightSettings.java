@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2012 The CyanogenMod Project
+ *               2017-2020 The LineageOS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -163,7 +164,7 @@ public class NotificationLightSettings extends SettingsPreferenceFragment implem
         }
 
         // Missed call and Voicemail preferences should only show on devices with a voice capabilities
-        TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager tm = getActivity().getSystemService(TelephonyManager.class);
         if (tm.getPhoneType() == TelephonyManager.PHONE_TYPE_NONE
                 || (!mLedCanPulse && !mMultiColorLed)) {
             removePreference(PHONE_SECTION);
@@ -523,8 +524,13 @@ public class NotificationLightSettings extends SettingsPreferenceFragment implem
         final Dialog dialog;
         switch (id) {
             case DIALOG_APPS:
+                Resources res = getResources();
+                int paddingTop = res.getDimensionPixelOffset(R.dimen.package_list_padding_top);
+
                 final ListView list = new ListView(getActivity());
                 list.setAdapter(mPackageAdapter);
+                list.setDivider(null);
+                list.setPadding(0, paddingTop, 0, 0);
 
                 builder.setTitle(R.string.choose_app);
                 builder.setView(list);
